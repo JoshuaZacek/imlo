@@ -216,3 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# PyTorch dataset
+data/
+
+# macOS files
+.DS_Store
