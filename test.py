@@ -1,8 +1,7 @@
 # imports
 import torch
-from torchvision import datasets, transforms
 from model import NeuralNet
-from dataLoader import initDataLoader
+from dataloader import initDataLoader
 
 # select compute device
 device = torch.device(

@@ -1,11 +1,14 @@
 # imports
 import torch
-from dataLoader import initDataLoader
+from dataloader import initDataLoader
 from model import PetBreedClassifier
 
 # constants
 EPOCHS = 30
 SEED = 42
+
+# set random seed for reproducibility
+torch.manual_seed(SEED)
 
 # select compute device
 device = torch.device(
