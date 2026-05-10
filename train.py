@@ -4,7 +4,7 @@ from dataloader import initDataLoader
 from model import PetBreedClassifier
 
 # constants
-EPOCHS = 30
+EPOCHS = 10
 SEED = 42
 
 # set random seed for reproducibility

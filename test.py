@@ -1,6 +1,6 @@
 # imports
 import torch
-from model import NeuralNet
+from model import PetBreedClassifier
 from dataloader import initDataLoader
 
 # select compute device
@@ -13,7 +13,7 @@ print(f"using device: {device}")
 dataLoader = initDataLoader("test")
 
 # load model
-model = NeuralNet().to(device)
+model = PetBreedClassifier().to(device)
 model.load_state_dict(
     torch.load("model.pth", map_location=device)
 )
