@@ -1,6 +1,6 @@
 from torch import nn
 
-class NeuralNet(nn.Module):
+class PetBreedClassifier(nn.Module):
     def __init__(self):
         super().__init__()
 

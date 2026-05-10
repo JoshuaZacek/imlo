@@ -2,9 +2,7 @@
 import torch
 from torchvision import datasets, transforms
 from model import NeuralNet
-
-# constants
-EPOCHS = 10
+from dataLoader import initDataLoader
 
 # select compute device
 device = torch.device(
@@ -13,22 +11,7 @@ device = torch.device(
 print(f"using device: {device}")
 
 # load dataset
-dataTransformations = transforms.Compose([
-    transforms.Resize((224, 224)),
-    transforms.ToTensor(),
-])
-data = datasets.OxfordIIITPet(
-    root="data",
-    split="test",
-    target_types="category",
-    download=True,
-    transform=dataTransformations
-)
-dataLoader = torch.utils.data.DataLoader(
-    data,
-    batch_size=32,
-    shuffle=True
-)
+dataLoader = initDataLoader("test")
 
 # load model
 model = NeuralNet().to(device)

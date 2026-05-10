@@ -1,10 +1,11 @@
 # imports
 import torch
-from torchvision import datasets, transforms
-from model import NeuralNet
+from dataLoader import initDataLoader
+from model import PetBreedClassifier
 
 # constants
-EPOCHS = 10
+EPOCHS = 30
+SEED = 42
 
 # select compute device
 device = torch.device(
@@ -13,25 +14,10 @@ device = torch.device(
 print(f"using device: {device}")
 
 # load dataset
-dataTransformations = transforms.Compose([
-    transforms.Resize((224, 224)),
-    transforms.ToTensor(),
-])
-data = datasets.OxfordIIITPet(
-    root="data",
-    split="trainval",
-    target_types="category",
-    download=True,
-    transform=dataTransformations
-)
-dataLoader = torch.utils.data.DataLoader(
-    data,
-    batch_size=32,
-    shuffle=True
-)
+dataLoader = initDataLoader("train")
 
 # load model
-model = NeuralNet().to(device)
+model = PetBreedClassifier().to(device)
 criterion = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
@@ -39,9 +25,9 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 for epoch in range(EPOCHS):
     model.train()
 
-    for inputs, labels in dataLoader:
+    for images, labels in dataLoader:
         # move data to compute device
-        images = inputs.to(device)
+        images = images.to(device)
         labels = labels.to(device)
 
         # update model weights
