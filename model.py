@@ -5,17 +5,35 @@ class PetBreedClassifier(nn.Module):
         super().__init__()
 
         self.features = nn.Sequential(
-            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3, padding=1),
-            nn.MaxPool2d(kernel_size=2, stride=2),
-            nn.ReLU()
+            nn.Conv2d(3, 32, kernel_size=3, padding=1),
+            nn.BatchNorm2d(32),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2),
+
+            nn.Conv2d(32, 64, kernel_size=3, padding=1),
+            nn.BatchNorm2d(64),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2),
+
+            nn.Conv2d(64, 128, kernel_size=3, padding=1),
+            nn.BatchNorm2d(128),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2),
+
+            nn.Conv2d(128, 256, kernel_size=3, padding=1),
+            nn.BatchNorm2d(256),
+            nn.ReLU(inplace=True),
+            nn.AdaptiveAvgPool2d((1, 1)),
+        )
+        self.classifier = nn.Sequential(
+            nn.Flatten(),
+            nn.Dropout(p=0.3),
+            nn.Linear(256, 128),
+            nn.ReLU(inplace=True),
+            nn.Dropout(p=0.3),
+            nn.Linear(128, 37),
         )
 
-        self.fc1 = nn.Linear(32 * 112 * 112, 37)
-
     def forward(self, inputs):
-        inputs = self.features(inputs)
-
-        inputs = inputs.view(inputs.size(0), -1)
-        outputs = self.fc1(inputs)
-
+        outputs = self.classifier(self.features(inputs))
         return outputs

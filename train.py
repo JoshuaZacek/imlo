@@ -5,7 +5,7 @@ from dataloader import initDataLoader
 from model import PetBreedClassifier
 
 # constants
-EPOCHS = 10
+EPOCHS = 30
 SEED = 42
 
 # set random seed for reproducibility
@@ -17,9 +17,10 @@ device = torch.device(
 )
 print(f"using device: {device}")
 
-# load dataset
-trainingDataLoader = initDataLoader("train")
-testDataLoader = initDataLoader("test")
+# load datasets
+trainingDataLoader = initDataLoader("train", augment=True)
+testDataLoader = initDataLoader("test", augment=False)
+trainingEvalDataLoader = initDataLoader("train", augment=False)
 
 # load model
 model = PetBreedClassifier().to(device)
@@ -43,7 +44,7 @@ for epoch in range(EPOCHS):
         optimizer.step()
 
     testAccuracy = calculateAccuracy(model, testDataLoader, device)
-    trainAccuracy = calculateAccuracy(model, trainingDataLoader, device)
+    trainAccuracy = calculateAccuracy(model, trainingEvalDataLoader, device)
 
     print(f"epoch {epoch + 1}/{EPOCHS} | test accuracy: {testAccuracy:.2f}% | training accuracy: {trainAccuracy:.2f}%")
 
