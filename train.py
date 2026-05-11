@@ -8,13 +8,15 @@ from model import PetBreedClassifier
 EPOCHS = 30
 SEED = 42
 
-# set random seed for reproducibility
+# reproducibility
 torch.manual_seed(SEED)
+torch.backends.cudnn.benchmark = False
+torch.backends.cudnn.deterministic = True
+torch.use_deterministic_algorithms(True)
 
-# select compute device
-device = torch.device(
-    "mps" if torch.backends.mps.is_available() else "cpu"
-)
+# select compute device (Apple silicon, Nvidia GPU, or CPU)
+deviceType = "mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu"
+device = torch.device(deviceType)
 print(f"using device: {device}")
 
 # load datasets
