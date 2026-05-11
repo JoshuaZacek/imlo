@@ -2,6 +2,7 @@
 import torch
 from model import PetBreedClassifier
 from dataloader import initDataLoader
+from accuracy import calculateAccuracy
 
 # select compute device
 device = torch.device(
@@ -20,21 +21,5 @@ model.load_state_dict(
 model.eval()
 
 # run model with test dataset
-correct = 0
-total = 0
-
-with torch.no_grad():
-    for images, labels in dataLoader:
-        images = images.to(device)
-        labels = labels.to(device)
-
-        outputs = model(images)
-
-        _, predicted = torch.max(outputs, 1)
-
-        total += labels.size(0)
-        correct += (predicted == labels).sum().item()
-
- # calculate accuracy
-accuracy = 100 * correct / total
+accuracy = calculateAccuracy(model, dataLoader, device)
 print(f"test accuracy: {accuracy:.2f}%")

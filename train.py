@@ -1,5 +1,6 @@
 # imports
 import torch
+from accuracy import calculateAccuracy
 from dataloader import initDataLoader
 from model import PetBreedClassifier
 
@@ -17,7 +18,8 @@ device = torch.device(
 print(f"using device: {device}")
 
 # load dataset
-dataLoader = initDataLoader("train")
+trainingDataLoader = initDataLoader("train")
+testDataLoader = initDataLoader("test")
 
 # load model
 model = PetBreedClassifier().to(device)
@@ -28,7 +30,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 for epoch in range(EPOCHS):
     model.train()
 
-    for images, labels in dataLoader:
+    for images, labels in trainingDataLoader:
         # move data to compute device
         images = images.to(device)
         labels = labels.to(device)
@@ -40,7 +42,10 @@ for epoch in range(EPOCHS):
         loss.backward()
         optimizer.step()
 
-    print(f"{epoch + 1}/{EPOCHS}")
+    testAccuracy = calculateAccuracy(model, testDataLoader, device)
+    trainAccuracy = calculateAccuracy(model, trainingDataLoader, device)
+
+    print(f"epoch {epoch + 1}/{EPOCHS} | test accuracy: {testAccuracy:.2f}% | training accuracy: {trainAccuracy:.2f}%")
 
 # save trained model
 torch.save(
