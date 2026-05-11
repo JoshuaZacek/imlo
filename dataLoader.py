@@ -5,7 +5,6 @@ def getTransforms(augment):
     # seperate transforms for training and testing datasets because of data augmentation for training dataset
     if augment:
         return transforms.Compose([
-            transforms.Resize((224, 224)),
             transforms.RandomHorizontalFlip(),
             transforms.RandomRotation(15),
             transforms.ToTensor(),
@@ -31,7 +30,7 @@ def initDataLoader(mode, augment=False):
     dataLoader = torch.utils.data.DataLoader(
         data,
         batch_size=32,
-        shuffle=True
+        shuffle=(True if mode == "train" else False),
     )
 
     return dataLoader
