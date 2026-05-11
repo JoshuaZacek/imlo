@@ -7,7 +7,7 @@ def getTransforms(augment):
         return transforms.Compose([
             transforms.Resize((224, 224)),
             transforms.RandomHorizontalFlip(),
-            transforms.RandomRotation(10),
+            transforms.RandomRotation(15),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.4783, 0.4459, 0.3957], std=[0.2601, 0.2548, 0.2627]),
         ])
