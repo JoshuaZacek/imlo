@@ -26,8 +26,13 @@ trainingEvalDataLoader = initDataLoader("train", augment=False)
 
 # load model
 model = PetBreedClassifier().to(device)
-criterion = torch.nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+criterion = torch.nn.CrossEntropyLoss(label_smoothing=0.1)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.0003, weight_decay=0.0001)
+lrScheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+    optimizer,
+    T_max=EPOCHS,
+    eta_min=0.000001,
+)
 
 # model training
 for epoch in range(EPOCHS):
@@ -43,12 +48,17 @@ for epoch in range(EPOCHS):
         outputs = model(images)
         loss = criterion(outputs, labels)
         loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
         optimizer.step()
+
+    lrScheduler.step()
+    lrScheduler.last_epoch += 1
 
     testAccuracy = calculateAccuracy(model, testDataLoader, device)
     trainAccuracy = calculateAccuracy(model, trainingEvalDataLoader, device)
+    currentLearningRate = optimizer.param_groups[0]["lr"]
 
-    print(f"epoch {epoch + 1}/{EPOCHS} | test accuracy: {testAccuracy:.2f}% | training accuracy: {trainAccuracy:.2f}%")
+    print(f"epoch {epoch + 1}/{EPOCHS} | lr: {currentLearningRate:.6f} | test accuracy: {testAccuracy:.2f}% | training accuracy: {trainAccuracy:.2f}%")
 
 # save trained model
 torch.save(
