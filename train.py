@@ -27,7 +27,7 @@ trainingEvalDataLoader = initDataLoader("train", augment=False)
 # load model
 model = PetBreedClassifier().to(device)
 criterion = torch.nn.CrossEntropyLoss(label_smoothing=0.1)
-optimizer = torch.optim.Adam(model.parameters(), lr=0.0003, weight_decay=0.0001)
+optimizer = torch.optim.AdamW(model.parameters(), lr=0.0003, weight_decay=0.0001)
 lrScheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
     optimizer,
     T_max=EPOCHS,
@@ -52,7 +52,6 @@ for epoch in range(EPOCHS):
         optimizer.step()
 
     lrScheduler.step()
-    lrScheduler.last_epoch += 1
 
     testAccuracy = calculateAccuracy(model, testDataLoader, device)
     trainAccuracy = calculateAccuracy(model, trainingEvalDataLoader, device)

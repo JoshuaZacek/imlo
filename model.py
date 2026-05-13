@@ -28,7 +28,7 @@ class ResidualBlock(nn.Module):
         outputs = self.conv2(outputs)
         outputs = self.bn2(outputs)
 
-        outputs += residual
+        outputs = outputs + residual
         outputs = self.relu(outputs)
 
         return outputs

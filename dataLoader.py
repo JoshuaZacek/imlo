@@ -5,9 +5,10 @@ def getTransforms(augment):
     # seperate transforms for training and testing datasets because of data augmentation for training dataset
     if augment:
         return transforms.Compose([
-            transforms.Resize((224, 224)),
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomRotation(15),
+            transforms.RandomResizedCrop(224, scale=(0.7, 1.0), ratio=(0.75, 1.33)),
+            transforms.RandomHorizontalFlip(p=0.5),
+            transforms.RandomRotation(10),
+            transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.05),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.4783, 0.4459, 0.3957], std=[0.2601, 0.2548, 0.2627]),
         ])
