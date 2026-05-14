@@ -36,6 +36,8 @@ lrScheduler = torch.optim.lr_scheduler.OneCycleLR(
 )
 
 # model training
+bestTestAccuracy = 0
+
 for epoch in range(EPOCHS):
     model.train()
 
@@ -59,9 +61,12 @@ for epoch in range(EPOCHS):
 
     print(f"epoch {epoch + 1}/{EPOCHS} | lr: {currentLearningRate:.6f} | test accuracy: {testAccuracy:.2f}% | test loss: {testLoss:.4f} | training accuracy: {trainAccuracy:.2f}% | training loss: {trainLoss:.4f}")
 
-# save trained model
-torch.save(
-    model.state_dict(),
-    "model.pth"
-)
-print("training complete")
+    # save best model
+    if testAccuracy > bestTestAccuracy:
+        bestTestAccuracy = testAccuracy
+        torch.save(
+            model.state_dict(),
+            "model.pth"
+        )
+
+print(f"training complete | best test accuracy: {bestTestAccuracy:.2f}%")
