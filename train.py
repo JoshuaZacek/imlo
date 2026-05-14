@@ -1,6 +1,6 @@
 # imports
 import torch
-from accuracy import calculateAccuracy
+from eval import evaluateModel
 from dataloader import initDataLoader
 from model import PetBreedClassifier
 
@@ -53,11 +53,11 @@ for epoch in range(EPOCHS):
 
     lrScheduler.step()
 
-    testAccuracy = calculateAccuracy(model, testDataLoader, device)
-    trainAccuracy = calculateAccuracy(model, trainingEvalDataLoader, device)
+    testAccuracy, testLoss = evaluateModel(model, testDataLoader, criterion, device)
+    trainAccuracy, trainLoss = evaluateModel(model, trainingEvalDataLoader, criterion, device)
     currentLearningRate = optimizer.param_groups[0]["lr"]
 
-    print(f"epoch {epoch + 1}/{EPOCHS} | lr: {currentLearningRate:.6f} | test accuracy: {testAccuracy:.2f}% | training accuracy: {trainAccuracy:.2f}%")
+    print(f"epoch {epoch + 1}/{EPOCHS} | lr: {currentLearningRate:.6f} | test accuracy: {testAccuracy:.2f}% | test loss: {testLoss:.4f} | training accuracy: {trainAccuracy:.2f}% | training loss: {trainLoss:.4f}")
 
 # save trained model
 torch.save(

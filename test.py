@@ -2,7 +2,7 @@
 import torch
 from model import PetBreedClassifier
 from dataloader import initDataLoader
-from accuracy import calculateAccuracy
+from eval import evaluateModel
 
 # select compute device
 device = torch.device(
@@ -21,5 +21,5 @@ model.load_state_dict(
 model.eval()
 
 # run model with test dataset
-accuracy = calculateAccuracy(model, dataLoader, device)
-print(f"test accuracy: {accuracy:.2f}%")
+accuracy, loss = evaluateModel(model, dataLoader, torch.nn.CrossEntropyLoss(), device)
+print(f"test accuracy: {accuracy:.2f}% | test loss: {loss:.4f}")
