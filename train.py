@@ -28,10 +28,11 @@ trainingEvalDataLoader = initDataLoader("train", augment=False)
 model = PetBreedClassifier().to(device)
 criterion = torch.nn.CrossEntropyLoss(label_smoothing=0.1)
 optimizer = torch.optim.AdamW(model.parameters(), lr=0.0003, weight_decay=0.0001)
-lrScheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+lrScheduler = torch.optim.lr_scheduler.OneCycleLR(
     optimizer,
-    T_max=EPOCHS,
-    eta_min=0.000001,
+    max_lr=0.0003,
+    epochs=30,
+    steps_per_epoch=len(trainingDataLoader)
 )
 
 # model training
@@ -50,8 +51,7 @@ for epoch in range(EPOCHS):
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
         optimizer.step()
-
-    lrScheduler.step()
+        lrScheduler.step()
 
     testAccuracy, testLoss = evaluateModel(model, testDataLoader, criterion, device)
     trainAccuracy, trainLoss = evaluateModel(model, trainingEvalDataLoader, criterion, device)

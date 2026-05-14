@@ -34,7 +34,7 @@ def initDataLoader(mode, augment=False):
         batch_size=64,
         shuffle=(True if mode == "train" else False),
         pin_memory=torch.cuda.is_available(),
-        num_workers=2 if torch.cuda.is_available() else 0
+        num_workers=8 if torch.cuda.is_available() else 0
     )
 
     return dataLoader
