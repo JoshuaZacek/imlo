@@ -6,7 +6,7 @@ from model import PetBreedClassifier
 
 # constants
 EPOCHS = 30
-SEED = 42
+SEED = 12374602122224593468
 
 # reproducibility
 torch.manual_seed(SEED)
@@ -32,7 +32,7 @@ lrScheduler = torch.optim.lr_scheduler.OneCycleLR(
     optimizer,
     max_lr=0.0003,
     epochs=30,
-    steps_per_epoch=len(trainingDataLoader)
+    steps_per_epoch=len(trainingDataLoader),
 )
 
 # model training
